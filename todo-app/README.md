@@ -26,7 +26,7 @@
 
 <br>
 
-<img src="./src/Img/completeImg.png" width="80%" height="30%" alt="completeImg"}></img>
+<img src="./src/Img/completeImg.png" width="80%" height="30%" title="px(픽셀) 크기 설정" alt="completeImg"></img>
 <br>
 
 <hr>
