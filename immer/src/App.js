@@ -1,25 +1,127 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useRef, useCallback, useState} from 'react';
+import produce from 'immer';
 
-function App() {
+const App = () => {
+  const nextId = useRef(1);
+  const [form, setForm] = useState({
+    name: '',
+    username: ''
+  });
+  const [data, setData] = useState({
+    array: [],
+    uselessValue: null
+  });
+
+  // const onChange = useCallback(e => {
+  //   const {name, value} = e.target;
+  //   setForm({
+  //     ...form,
+  //     [name] : [value]
+  //   });
+  // },[form]);
+
+  // const onSubmit = useCallback(e => {
+  //   e.preventDefault();
+  //   const info = {
+  //     id: nextId.current,
+  //     name: form.name,
+  //     username: form.username
+  //   };
+
+  //   setData({
+  //     ...data,
+  //     array: data.array.concat(info)
+  //   });
+
+  //   setForm({
+  //     name: "",
+  //     username: ""
+  //   });
+  //   nextId.current += 1;
+  // }, [data, form.name, form.username]);
+
+  // const onRemove = useCallback(id => {
+  //   setData({
+  //     ...data,
+  //     array: data.array.filter(info => info.id !== id)
+  //   });
+  // },[data]);
+
+  // immer를 사용한 상태 업데이트
+  const onChange = useCallback(e => {
+    const {name, value} = e.target;
+
+  //   setForm(produce(form, draft => {
+  //       draft[name] = value;
+  //     })
+  //   );
+  // },[form]);
+
+    // useState의 함수형 업데이트와 immer 함께 사용
+    setForm(produce(draft => {
+      draft[name] = value;
+    }));
+  }, []);
+
+  const onSubmit = useCallback(e => {
+    e.preventDefault();
+    const info = {
+      id: nextId.current,
+      name: form.name,
+      username: form.username
+    };
+
+    // setData(produce(data, draft => {
+    //   draft.array.push(info);
+    // }));
+    setData(produce(draft => {
+      draft.array.push(info);
+    }));
+
+    setForm({
+      name: '',
+      username: ''
+    });
+    nextId.current += 1;
+  // }, [data, form.name, form.username]);
+  },[form.name, form.username]);
+
+  const onRemove = useCallback(id => {
+    // setData(produce(data, draft => {
+    //   draft.array.splice(draft.array.findIndex(info => info.id === id), 1);
+    // }));
+  // },[data]);
+    setData(produce(draft => {
+      draft.array.splice(draft.array.findIndex(info => info.id === id),1);
+    }));
+  },[]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <form onSubmit={onSubmit}>
+        <input
+          name="username"
+          placeholder="아이디"
+          value={form.username}
+          onChange={onChange}/>
+        <input
+          name="name"
+          placeholder="이름"
+          value={form.name}
+          onChange={onChange}/>
+        <button type="submit">등록</button>
+      </form>
+      <div>
+        <ul>
+          {data.array.map(info => (
+            <li key={info.id} onClick={() => onRemove(info.id)}>
+              {info.username} ({info.name})
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
-}
+};
 
 export default App;
