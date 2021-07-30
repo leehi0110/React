@@ -1,70 +1,78 @@
-# Getting Started with Create React App
+# Immer (불변성 유지)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## immer 사용법
 
-## Available Scripts
+```
+import produce from 'immer';
 
-In the project directory, you can run:
+const nextState = produce(originalState, draft => {
+  // 바꾸고 싶은 값 바꾸기
+  draft.somewhere.deep.inside = 5;
+})
+```
 
-### `npm start`
+## produce 함수는 두 가지 파라미터를 받는다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+> 1. 첫 번쨰 파라미터는 수정하고 싶은 상태
+>
+> 2. 두 번째 파라미터는 상태를 어떻게 업데이트 할 지 정의하는 함수
+>
+> 3. 두 번째 파라미터로 전달되는 함수 내부에서 원하는 값을 변경하면 produce 함수가 불변성 유지를 대신해 주면서 새로운 상태를 생성한다.
+>    <br> <br>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## produce 함수를 이용한 불변성 유지 예제
 
-### `npm test`
+> <br> <br>
+>
+> ```
+> import produce from "immer";
+>
+> const originalState = [
+>  {
+>    id: 1,
+>    todo: "전개 연산자와 배열 내장 함수로 불변성 유지하기",
+>    checked: true,
+>  },
+>  {
+>    id: 2,
+>    todo: "immer로 불변성 유지하기",
+>    checked: false,
+>  },
+> ];
+>
+> const nextState = produce(originalState, (draft) => {
+>  // id가 2인 항목의 checked 값을 true로 설정
+>  const todo = draft.find((t) => t.id === 2);
+>  todo.checked = true;
+>
+>  // 배열에 새로운 데이터 추가
+>  draft.push({
+>    id: 3,
+>    todo: "일정 관리 앱에 immer 적용하기",
+>    checked: false,
+>  });
+>
+>  // id = 1인 항목을 제거하기
+>  draft.splice(
+>    draft.findIndex((t) => t.id === 1),
+>    1
+>  );
+> });
+> ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## useState의 함수형 업데이트와 immer 함께 사용
 
-### `npm run build`
+> produce 함수를 호출할 때, 첫 번째 파라미터가 함수 형태라면 업데이트 함수를 반환한다.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+const updata = produce(draft => {
+  draft.value = 2;
+});
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+const originalState = {
+  value: 1,
+  foo: 'bar',
+};
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+const nextState = update(originalState);
+```
