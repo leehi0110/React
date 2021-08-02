@@ -27,3 +27,15 @@
 
 > - immer에서 제공하는 produce를 이용해 불변성을 관리한다.
 > - produce 함수에서 반환하는 업데이트 함수와 useState를 함께 사용할 수 있다.
+
+### 4. Router
+
+> - react-router를 이용해 SPA를 구현한다.
+> - Path
+> - Link
+> - 여러개의 Path 지정
+> - URL 파라미터와 쿼리
+> - 서브 라우트
+> - History
+> - withRouter
+> - NavLink
