@@ -39,3 +39,9 @@
 > - History
 > - withRouter
 > - NavLink
+
+### 5. News-Viewer
+
+> - Axios + async / await
+> - Using API
+> - react-router
