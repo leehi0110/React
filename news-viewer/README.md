@@ -109,3 +109,47 @@
 <img src="./src/Images/naviImage.png" width="100%" height="30%" title="px(픽셀) 크기 설정" alt="RubberDuck"/>
 
 <br>
+
+### 3. Apply React Router
+
+<br>
+
+> 이전에 useState와 setState를 사용해 관리하던 navigation을 React Router를 사용해 관리할 수 있도록 수정
+> <br>
+>
+> ```
+> const App = () => {
+>  return <Route path="/:category?" component={NewsPage} />;
+> };
+> ```
+>
+> match.params을 이용해 선택된 카테고리를 보내준다.
+>
+> ```
+> const NewsPage = ({match}) => {
+>  const category = match.params.category || 'all';
+>
+>  return (
+>    <>
+>      <Categories/>
+>      <NewsList category={category}/>
+>    </>
+>  );
+> };
+> ```
+>
+> NavLink를 이용해 category를 클릭할시 to를 이용해 주소 변경
+> <br>
+>
+> ```
+> <Category
+>  key={c.name}
+>  activeClassName="active"
+>  exact={c.name === 'all'}
+>  to={c.name === 'all' ? '/' : `/${c.name}`}
+>
+>  {c.text}
+> </Category>
+> ```
+>
+> <br>
