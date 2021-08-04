@@ -45,3 +45,9 @@
 > - Axios + async / await
 > - Using API
 > - react-router
+
+### 6. ContextAPI
+
+> - Provider + Consumer를 이용한 상태관리
+> - useState와 함께 상태 변경 및 관리
+> - useContext를 이용한 상태관리
