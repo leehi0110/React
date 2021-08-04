@@ -1,70 +1,119 @@
-# Getting Started with Create React App
+# Context API
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Provider / Consumer / useContext hook
 
-## Available Scripts
+<br>
 
-In the project directory, you can run:
+### 1. createContext
 
-### `npm start`
+<br>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+> createContext를 사용해 context 객체를 생성할 수 있으며, createContext는 Provider와 Consumer 컴포넌트를 반환한다.
+> <br>
+>
+> ```
+> const ColorContext = createContext({
+>  state: { color: 'black', subcolor: 'red'},
+>  actions: {
+>    setColor: () => {},
+>    setSubcolor: () => {},
+>  }
+> });
+> ```
+>
+> <br>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+<br>
 
-### `npm test`
+### 2. Provider
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<br>
 
-### `npm run build`
+> <br>
+> Provider는 정의한 context를 하위 컴포넌트에 전달하는 역할을 한다.
+> <br> <br>
+> Provider 하위의 context를 가진 component는 provider의 value로 가진 state가 변화할 때 마다 리렌더링 된다.
+> <br>
+>
+> ```
+> const ColorProvider = ({children}) => {
+>  const [color, setColor] = useState('black');
+>  const [subcolor, setSubcolor] = useState('red');
+>
+>  const value = {
+>    state : {color, subcolor},
+>    actions: {setColor, setSubcolor}
+>  };
+>
+>  return (
+>    <ColorContext.Provider value={value}>{children}</ColorContext.Provider>
+>  );
+> };
+> ```
+>
+> <br>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<br>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 3. Consumer
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<br>
 
-### `npm run eject`
+> <br>
+> Context의 변화를 구독하는 컴포넌트이다.
+> <br> <br>
+> context의 자식은 함수형 컴포넌트여야 한다
+> <br> <br>
+> 컴포넌트가 가지는 context는 가장 가까운 provider이다.
+> <br> <br>
+> 상위 provider가 없다면 createContext에서 정의한 defaultValue를 가진다.
+> <br>
+>
+> ```
+> <ColorConsumer>
+>  {({ actions}) => (
+>   // 객체 비구조화 할당을 사용
+>    <div style={{display: "flex"}}>
+>      {colors.map(color => (
+>        <div
+>          key={color}
+>          style={{background: color, width: "24px", height: '24px', cursor: 'pointer'}}
+>          onClick={() => actions.setColor(color)}
+>          onContextMenu={e => { // 오른쪽 버튼 클릭 이벤트
+>            e.preventDefault(); // 오른쪽 버튼 클릭 시 메뉴가 뜨는 것을 방지
+>            actions.setSubcolor(color);
+>          }}
+>        />
+>      ))}
+>    </div>
+>  )}
+> </ColorConsumer>
+> ```
+>
+> <br>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+<br>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 4. useContext hook 사용
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+<br>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+> <br>
+> Consumer가 아닌 userContext hook을 사용해 context의 값을 사용할 수 있다.
+> <br> <br>
+>
+> ```
+> const { state } = useContext(ColorContext);
+>  return (
+>    <>
+>      <div
+>        style={{width: '64px', height: '64px', background: state.color}}
+>      />
+>      <div
+>        style={{width: '32px', height: '32px', background: state.subcolor}}
+>      />
+>    </>
+>  )
+> ```
+>
+> <br>
