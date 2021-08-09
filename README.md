@@ -56,3 +56,10 @@
 
 > - Redux를 이용한 상태관리
 > - parcel bundler를 이용한 vanillaJS 실행
+
+### 8. React + Redux
+
+> - Redux를 이용해 React 상태관리
+> - Ducks 패턴을 이용해 액션 타입, 액션 생성 함수, 리듀서 함수를 작성
+> - combineReducers, bindActionCreators 유틸함수 사용
+> - Provider와 connect 사용
