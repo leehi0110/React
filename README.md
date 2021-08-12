@@ -66,3 +66,8 @@
 > - createAction과 handleActions를 이용해 액션 함수 및 리듀서를 간단하게 작성
 > - immer를 사용해 불변성 유지
 > - useSelector와 useDispatch hook을 이용해 컴포넌트 내에서 리덕스의 상태를 가져오고 action을 dispatch하기
+
+### 9. Redux middleware
+
+> - 액션을 디스패치 받아 처리하기 전 미들웨어로서 추가적인 작업을 처리할 수 있도록 개발
+> - redux-thunk를 이용해 미들웨어로서 redux 작성
