@@ -84,3 +84,55 @@
 >
 > loading 상태를 관리하는 리덕스 모듈을 추가해 특정 액션이 디스패치될 때 마다 로딩 상태를 변경해주는 작업 또한 처리
 > <br>
+
+<br>
+
+### 3. redux-saga
+
+<br>
+
+> redux-saga는 다음과 같은 경우에 대한 처리를 할 수 있다.
+>
+> - 기존 요청을 취소 처리해야 할 때
+> - 특정 액션이 발생 했을 때 다른 액션을 발생시키거나, API 요청 등 리덕스와 관계없는 코드를 실행할 때
+> - API 요청 실패시 재요청 할 때
+>
+> <br>
+>
+> ```
+> const getPostSaga = createRequestSaga(GET_POST, api.getPost);
+> const getUsersSaga = createRequestSaga(GET_USERS, api.getUsers);
+>
+> export default function createRequestSaga(type, request) {
+>  const SUCCESS = `${type}_SUCCESS`;
+>  const FAILURE = `${type}_FAILURE`;
+>
+>  return function* (action) {
+>    yield put(startLoading(type));
+>
+>    try {
+>      const response = yield call(request, action.payload);
+>
+>      yield put({
+>        type: SUCCESS,
+>        payload: response.data,
+>      });
+>    } catch (e) {
+>      yield put({
+>        type: FAILURE,
+>        payload: e,
+>        error: true,
+>      });
+>    }
+>
+>    yield put(finishLoading(type));
+>  };
+> }
+>
+> export function* sampleSaga() {
+>  yield takeLatest(GET_POST, getPostSaga);
+>  yield takeLatest(GET_USERS, getUsersSaga);
+> }
+> ```
+>
+> <br>
