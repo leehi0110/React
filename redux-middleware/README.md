@@ -1,70 +1,86 @@
-# Getting Started with Create React App
+# Redux MiddleWare
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### npm install package
 
-## Available Scripts
+> npm install redux-logger
+> npm install redux-thunk
+> npm install axios
 
-In the project directory, you can run:
+### MiddleWare
 
-### `npm start`
+<img src="./src/Images/middlewareImage.png" width="100%" height="100%" alt="middleWareLogic"/>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+> 리덕스 미들웨어를 사용할 경우 액션이 디스패치 된 뒤, 리듀서에서 해당 액션을 받아와 업데이트 하기전에 추가적인 작업을 할 수 있다.
+> <br> <br>
+> 추가적인 작업의 종류
+> <br>
+>
+> - 특정 조건에 따라 액션을 무시
+> - 액션을 콘솔로 출력하거나, 서버쪽에 로깅
+> - 액션이 디스패치 됐을 때 이를 수정해 리듀서에 전달
+> - 특정 액션이 발생했을 때 이에 기반하여 다른 액션을 발생
+> - 특정 액션이 발생했을 떄 특정 자바스크립트 함수를 실행
+>
+> 출처 : https://react.vlpt.us/redux-middleware/
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+<br>
 
-### `npm test`
+### 1. redux-logger
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<br>
 
-### `npm run build`
+<img src="./src/Images/loggerImage.png" width="100%" height="100%" alt="middleWareLogic"/>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+> <br>
+> 액션이 디스패치 되기전 상태와 후의 상태를 콘솔에 남겨주는다.
+> <br> <br>
+>
+> ```
+> import { createLogger } from "redux-logger";
+>
+> const logger = createLogger();
+> const store = createStore(rootReducer, applyMiddleware(logger));
+> ```
+>
+> store를 생성할 때, applyMiddleware()함수를 함께 넣어준다.
+> <br> <br>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<br>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 2. redux-thunk
 
-### `npm run eject`
+<br>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+> 액션 타입과 API를 요청하는 함수를 파라미터로 받아 작업을 처리해주는 thunk 함수 생성
+> <br> <br>
+>
+> ```
+> export default function createRequestThunk(type, request) {
+>  const SUCCESS = `${type}_SUCCESS`;
+>  const FAILURE = `${type}_FAILURE`;
+>
+>  return (params) => async (dispatch) => {
+>    dispatch({ type });
+>    dispatch(startLoading(type));
+>    try {
+>      const response = await request(params);
+>      dispatch({
+>        type: SUCCESS,
+>        payload: response.data,
+>      });
+>      dispatch(finishLoading(type));
+>    } catch (e) {
+>      dispatch({
+>        type: FAILURE,
+>        payload: e,
+>        error: true,
+>      });
+>      dispatch(finishLoading(type));
+>      throw e;
+>    }
+>  };
+> }
+> ```
+>
+> loading 상태를 관리하는 리덕스 모듈을 추가해 특정 액션이 디스패치될 때 마다 로딩 상태를 변경해주는 작업 또한 처리
+> <br>
