@@ -72,3 +72,8 @@
 > - 액션을 디스패치 받아 처리하기 전 미들웨어로서 추가적인 작업을 처리할 수 있도록 개발
 > - redux-thunk를 이용해 미들웨어로서 redux 작성
 > - redux-saga를 이용해 미들웨어로서 redux 작성
+
+### 10. Splitting
+
+> - React.laze()와 Suspense를 사용한 코드 스플리팅
+> - loadable 라이브러리를 이용한 코드 스플리팅
