@@ -75,5 +75,5 @@
 
 ### 10. Splitting
 
-> - React.laze()와 Suspense를 사용한 코드 스플리팅
+> - React.lazey와 Suspense를 사용한 코드 스플리팅
 > - loadable 라이브러리를 이용한 코드 스플리팅
