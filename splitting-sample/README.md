@@ -1,0 +1,3 @@
+# Splitting
+
+### npm install package
